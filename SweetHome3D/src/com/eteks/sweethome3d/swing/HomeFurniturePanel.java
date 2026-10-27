@@ -176,8 +176,11 @@ public class HomeFurniturePanel extends JPanel implements DialogView {
           }
         });
     }
-    
+
+    // TODO: here needs edit
+    // TODO: figure out where this property file is
     if (controller.isPropertyEditable(HomeFurnitureController.Property.DESCRIPTION)) {
+      System.out.println("DEBUG: hey this went through!!");
       // Create description label and its text field bound to DESCRIPTION controller property
       this.descriptionLabel = new JLabel(SwingTools.getLocalizedLabelText(preferences, HomeFurniturePanel.class, "descriptionLabel.text"));
       this.descriptionTextField = new AutoCompleteTextField(controller.getDescription(), 15, preferences.getAutoCompletionStrings("HomePieceOfFurnitureDescription"));
