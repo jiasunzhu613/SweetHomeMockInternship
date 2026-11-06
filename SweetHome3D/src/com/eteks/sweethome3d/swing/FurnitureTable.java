@@ -728,11 +728,15 @@ public class FurnitureTable extends JTable implements View, Printable {
   /**
    * Prints this component to make it fill <code>pageFormat</code> imageable size.
    */
+  // TODO: this is the main entry point for printing any class in this project
   public int print(Graphics g, PageFormat pageFormat, int pageIndex) throws PrinterException {
     // Create a printable column model from the column model of this table 
     // with printable renderers for each column
     DefaultTableColumnModel printableColumnModel = new DefaultTableColumnModel();
+
     TableColumnModel columnModel = getColumnModel();
+//    columnModel.add
+    // TODO: toggle levels in this columnModel
     final DefaultTableCellRenderer defaultRenderer = new DefaultTableCellRenderer();
     defaultRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
     TableCellRenderer printableHeaderRenderer = new TableCellRenderer() {
@@ -759,9 +763,9 @@ public class FurnitureTable extends JTable implements View, Printable {
       printableColumn.setIdentifier(tableColumn.getIdentifier());
       printableColumn.setHeaderValue(tableColumn.getHeaderValue());
       TableCellRenderer printableCellRenderer = new TableCellRenderer() {
-          public Component getTableCellRendererComponent(JTable table, Object value, 
+          public Component getTableCellRendererComponent(JTable table, Object value,
                                  boolean isSelected, boolean hasFocus, int row, int column) {
-            // Delegate rendering to existing cell renderer 
+            // Delegate rendering to existing cell renderer
             TableCellRenderer cellRenderer = tableColumn.getCellRenderer();
             Component rendererComponent = cellRenderer.getTableCellRendererComponent(table, value, 
                 isSelected, hasFocus, row, column);
@@ -775,12 +779,40 @@ public class FurnitureTable extends JTable implements View, Printable {
             return rendererComponent;
           }
         };
-      // Change printable column cell renderer 
+      // Change printable column cell renderer
       printableColumn.setCellRenderer(printableCellRenderer);
       // Change printable column header renderer
       printableColumn.setHeaderRenderer(printableHeaderRenderer);
       printableColumnModel.addColumn(printableColumn);
-    }    
+    }
+
+    // Add level column to printable column model
+//    TableColumn levelColumn = new TableColumn();
+//    levelColumn.setIdentifier(HomePieceOfFurniture.SortableProperty.LEVEL); // TODO this might not be right
+//    levelColumn.setHeaderValue("Level");
+//    TableCellRenderer levelCellRenderer = new TableCellRenderer() {
+//      public Component getTableCellRendererComponent(JTable table, Object value,
+//                                                     boolean isSelected, boolean hasFocus, int row, int column) {
+//        // Delegate rendering to existing cell renderer
+//        TableCellRenderer cellRenderer = levelColumn.getCellRenderer(); // TODO: recursive stack overflow, problem here!
+//        Component rendererComponent = cellRenderer.getTableCellRendererComponent(table, value,
+//                isSelected, hasFocus, row, column);
+//        if (rendererComponent instanceof JCheckBox) {
+//          // Prefer a x sign for boolean values instead of check boxes
+//          rendererComponent = defaultRenderer.getTableCellRendererComponent(table,
+//                  ((JCheckBox)rendererComponent).isSelected() ? "x" : "", false, false, row, column);
+//        }
+//        rendererComponent.setBackground(Color.WHITE);
+//        rendererComponent.setForeground(Color.BLACK);
+//        return rendererComponent;
+//      }
+//    };
+//    // Change level column cell renderer
+//    levelColumn.setCellRenderer(levelCellRenderer);
+//    // Change level column header renderer
+//    levelColumn.setHeaderRenderer(printableHeaderRenderer);
+//    printableColumnModel.addColumn(levelColumn);
+
     return print(g, pageFormat, pageIndex, printableColumnModel, Color.BLACK);
   }
 

@@ -4120,6 +4120,9 @@ public class HomePane extends JRootPane implements HomeView {
   public Callable<Void> showPrintDialog() {
     PageFormat pageFormat = HomePrintableComponent.getPageFormat(this.home.getPrint());
     final PrinterJob printerJob = PrinterJob.getPrinterJob();
+
+    // TODO: note that here we set what is actually beign printed
+    // The printer repeatedly calls the print function for the instance given until it receives NO_PAGE_LEFT
     printerJob.setPrintable(new HomePrintableComponent(this.home, this.controller, getFont()), pageFormat);
     String jobName = this.preferences.getLocalizedString(HomePane.class, "print.jobName");
     if (this.home.getName() != null) {
@@ -4127,6 +4130,8 @@ public class HomePane extends JRootPane implements HomeView {
           this.home.getName(), ContentManager.ContentType.SWEET_HOME_3D);
     }
     printerJob.setJobName(jobName);
+
+    // TODO: here is where the printer action starts
     if (printerJob.printDialog()) {
       return new Callable<Void>() {
           public Void call() throws RecorderException {

@@ -37,11 +37,7 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.security.AccessControlException;
 import java.text.MessageFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -341,42 +337,39 @@ public class HomePrintableComponent extends JComponent implements Printable {
             clipBounds.width, (int)pageFormat.getImageableHeight());
       }
     }
-    
+
+    // Start: Print furniture table
     View furnitureView = this.controller.getFurnitureController().getView();
-    if (furnitureView != null 
+
+    List<HomePieceOfFurniture.SortableProperty> furnitureVisibleProperties =
+            new ArrayList<HomePieceOfFurniture.SortableProperty>(this.home.getFurnitureVisibleProperties());
+
+    if (furnitureView != null
         && (homePrint == null || homePrint.isFurniturePrinted())) {
       FurnitureTable furnitureTable = null;
-      final FurnitureTable.FurnitureFilter furnitureFilter;
-      if (furnitureView instanceof FurnitureTable
-          && (homePrint == null
-              || homePrint.isPlanPrinted()
-              || homePrint.isView3DPrinted())) {
-        final Level selectedLevel = home.getSelectedLevel();
-        furnitureTable = (FurnitureTable)furnitureView;
-        furnitureFilter = furnitureTable.getFurnitureFilter();
-        furnitureTable.setFurnitureFilter(new FurnitureTable.FurnitureFilter() {
-            public boolean include(Home home, HomePieceOfFurniture piece) {
-              // Print only furniture at selected level when the plan or the 3D view is printed
-              return (furnitureFilter == null || furnitureFilter.include(home, piece))
-                  && piece.isAtLevel(selectedLevel)
-                  && (piece.getLevel() == null || piece.getLevel().isViewable());
-            }
-          });
-      } else {
-        furnitureFilter = null;
+
+      // Try to print next furniture view page
+      boolean levelStartVisiblity = furnitureVisibleProperties.contains(HomePieceOfFurniture.SortableProperty.LEVEL);
+
+      try {
+        if (!levelStartVisiblity) {
+          this.controller.getFurnitureController().toggleFurnitureVisibleProperty(HomePieceOfFurniture.SortableProperty.LEVEL);
+        }
+        pageExists = ((Printable)furnitureView).print(g2D, pageFormat, page);
+      } finally {
+        if (!levelStartVisiblity) {
+          this.controller.getFurnitureController().toggleFurnitureVisibleProperty(HomePieceOfFurniture.SortableProperty.LEVEL);
+        }
       }
-      // Try to print next furniture view page      
-      pageExists = ((Printable)furnitureView).print(g2D, pageFormat, page);
-      if (furnitureTable != null) {
-        // Restore previous filter
-        ((FurnitureTable)furnitureView).setFurnitureFilter(furnitureFilter);
-      }
+
       if (pageExists == PAGE_EXISTS
           && !this.printablePages.contains(page)) {
         this.printablePages.add(page);
         this.furniturePageCount++;
       }
-    }
+    } // End: Print furniture table
+
+    // Start: Print all level plans
     if (pageExists == NO_SUCH_PAGE 
         && planView != null 
         && (homePrint == null || homePrint.isPlanPrinted())) {
@@ -388,6 +381,7 @@ public class HomePrintableComponent extends JComponent implements Printable {
         this.planPageCount++;
       }
     }
+
     View view3D = this.controller.getHomeController3D().getView();
     if (pageExists == NO_SUCH_PAGE
         && view3D != null
@@ -421,8 +415,8 @@ public class HomePrintableComponent extends JComponent implements Printable {
         fixedFooterPageLabel.print(g2D);
         g2D.translate(-xFixedFooter, -yFixedFooter);
       }
-    }  
-    pageFormat.setPaper(oldPaper);    
+    }
+    pageFormat.setPaper(oldPaper);
     return pageExists;
   }
 
@@ -439,7 +433,9 @@ public class HomePrintableComponent extends JComponent implements Printable {
     return new Dimension((int)(pageFormat.getWidth() / maxSize * maxPreferredSize) + insets.left + insets.right, 
         (int)(pageFormat.getHeight() / maxSize * maxPreferredSize) + insets.top + insets.bottom);
   }
-  
+
+  // TODO: this prints the current page
+  // this thing has some process of "registering pages", we need to find the place that registers pages first
   /**
    * Paints the current page.
    */
