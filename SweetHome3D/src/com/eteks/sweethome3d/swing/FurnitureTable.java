@@ -1099,7 +1099,6 @@ public class FurnitureTable extends JTable implements View, Printable {
       for (int i = this.tableColumns.size() - 1; i >= 0; i--) {
         TableColumn tableColumn = this.tableColumns.get(i);
         Object columnIdentifier = tableColumn.getIdentifier();
-        System.out.println("DEBUG at 1102: " + columnIdentifier);
         if ((columnIdentifier instanceof HomePieceOfFurniture.SortableProperty)
             && !furnitureVisibleProperties.contains(columnIdentifier)) {
           removeColumn(tableColumn);
@@ -1108,7 +1107,6 @@ public class FurnitureTable extends JTable implements View, Printable {
       // Add columns not currently displayed
       for (HomePieceOfFurniture.SortableProperty visibleProperty : furnitureVisibleProperties) {
         TableColumn tableColumn = this.availableColumns.get(visibleProperty);
-        System.out.println("DEBUG at second loop: " + tableColumn.getIdentifier());
         if (!this.tableColumns.contains(tableColumn)) {
           addColumn(tableColumn);
         }
