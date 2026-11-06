@@ -355,6 +355,8 @@ public class HomePane extends JRootPane implements HomeView {
         furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.DEPTH);
     createAction(ActionType.SORT_HOME_FURNITURE_BY_HEIGHT, preferences, 
         furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.HEIGHT);
+    createAction(ActionType.SORT_HOME_FURNITURE_BY_VOLUME, preferences,
+            furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.VOLUME);
     createAction(ActionType.SORT_HOME_FURNITURE_BY_X, preferences, 
         furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.X);
     createAction(ActionType.SORT_HOME_FURNITURE_BY_Y, preferences, 
@@ -395,6 +397,8 @@ public class HomePane extends JRootPane implements HomeView {
         furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.DEPTH);
     createAction(ActionType.DISPLAY_HOME_FURNITURE_HEIGHT, preferences, 
         furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.HEIGHT);
+    createAction(ActionType.DISPLAY_HOME_FURNITURE_VOLUME, preferences,
+            furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.VOLUME);
     createAction(ActionType.DISPLAY_HOME_FURNITURE_X, preferences, 
         furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.X);
     createAction(ActionType.DISPLAY_HOME_FURNITURE_Y, preferences, 
@@ -1008,6 +1012,7 @@ public class HomePane extends JRootPane implements HomeView {
     addActionToMenu(ActionType.SELECT_ALL_AT_ALL_LEVELS, editMenu);
 
     // Create Furniture menu
+    // TODO: this is used to create the top furniture menu
     JMenu furnitureMenu = new JMenu(this.menuActionMap.get(MenuActionType.FURNITURE_MENU));
     addActionToMenu(ActionType.ADD_HOME_FURNITURE, furnitureMenu);
     addActionToMenu(ActionType.ADD_FURNITURE_TO_GROUP, furnitureMenu);
@@ -1324,6 +1329,8 @@ public class HomePane extends JRootPane implements HomeView {
         sortActions, HomePieceOfFurniture.SortableProperty.DEPTH);
     addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_HEIGHT, 
         sortActions, HomePieceOfFurniture.SortableProperty.HEIGHT);
+    addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_VOLUME,
+        sortActions, HomePieceOfFurniture.SortableProperty.VOLUME);
     addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_X, 
         sortActions, HomePieceOfFurniture.SortableProperty.X);
     addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_Y, 
@@ -1368,7 +1375,7 @@ public class HomePane extends JRootPane implements HomeView {
           public boolean isSelected() {
             return furnitureProperty == home.getFurnitureSortedProperty();
           }
-        }); 
+        });
       // Configure check box menu item action after setting its model to avoid losing its mnemonic
       sortMenuItem.setAction(new ResourceAction.MenuItemAction(sortAction));
       sortMenu.add(sortMenuItem);
@@ -1427,6 +1434,8 @@ public class HomePane extends JRootPane implements HomeView {
         displayPropertyActions, HomePieceOfFurniture.SortableProperty.DEPTH);
     addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_HEIGHT, 
         displayPropertyActions, HomePieceOfFurniture.SortableProperty.HEIGHT);
+    addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_VOLUME,
+        displayPropertyActions, HomePieceOfFurniture.SortableProperty.VOLUME);
     addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_X, 
         displayPropertyActions, HomePieceOfFurniture.SortableProperty.X);
     addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_Y, 
